@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Все товары</title>
+</head>
+<body>
+
+<div th:each="good:${goods}">
+    <a th:href="@{/admin/good/{id}(id=${good.getId()})}"
+       th:text="${good.getName()+' '+good.getPrice() +' ' + good.getCategory().getName()}">user</a>
+    <img th:src="@{/good/image/{id}(id=${good.getId()})}" alt="Product Image" style="width:100px; height:100px;"/>
+</div>
+</body>
+
+</html>

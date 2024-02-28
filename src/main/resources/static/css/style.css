@@ -1,0 +1,32 @@
+.navbar-nav .nav-link.active {
+    color: black;
+}
+.navbar-nav .nav-link.disabled {
+    color: #cbcbcb;
+}
+.navbar.navbar-expand-lg {
+    background: #F5F5DC;
+}
+.logo {
+    width: 50px;
+    height: 50px;
+    margin-right: 15px;
+}
+
+.card-img-top {
+    width: 85%; /* Ширина изображения теперь адаптируется к размеру карточки */
+    height: 400px; /* Высота остается фиксированной */
+    object-fit: cover; /* Позволяет изображению покрыть всю доступную область, сохраняя аспектное соотношение */
+    display: block; /* Убедитесь, что изображение отображается как блок, чтобы margin сработал корректно */
+    margin: auto; /* Центрирует изображение внутри контейнера */
+    padding: 20px;
+}
+.card-margin {
+    margin-top: 50px;
+}
+.card {
+    margin-top: 35px;
+}
+.navbar-text {
+    align-content: center;
+}

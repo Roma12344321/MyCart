@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+</head>
+<body>
+CART
+<div th:each="cart:${cartList}">
+    <p th:text="${cart.good.name}"></p>
+    <p th:text="${cart.good.price}"></p>
+    <p th:text="${cart.amount}"></p>
+    <form th:method="POST" th:action="@{/cart/{id}(id=${cart.getId()})}">
+        <input type="submit" value="Добавить">
+    </form>
+    <form th:method="DELETE" th:action="@{/cart/{id}(id=${cart.getId()})}">
+        <input type="submit" value="Удалить">
+    </form>
+    <br>
+</div>
+</body>
+</html>

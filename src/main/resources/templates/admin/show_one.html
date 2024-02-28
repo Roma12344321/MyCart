@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${good.getName()}">Title</title>
+</head>
+<body>
+
+<p th:text="${good.getName()}"></p>
+<p th:text="${good.getPrice()}"></p>
+<p th:text="${good.getDescription()}"></p>
+<p th:text="'Категория: '+${good.getCategory().getName()}"></p>
+<img th:src="@{/good/image/{id}(id=${good.getId()})}" alt="Product Image" style="width:100px; height:100px;"/>
+
+<form th:method="DELETE" th:action="@{/admin/good/{id}(id=${good.getId()})}">
+    <input type="submit" th:value="'Удалить '+${good.getName()}"/>
+</form>
+
+
+</body>
+</html>
