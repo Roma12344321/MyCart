@@ -10,7 +10,6 @@ import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 
@@ -46,22 +45,28 @@ public class CartService {
 
 
     @Transactional(readOnly = true)
-    public List<Cart> getAllCarts(Person person) {
+    public List<Cart> getAllCartsForPerson(Person person) {
         return cartRepository.findByPerson(person);
     }
 
     @Transactional
     public void deleteOneCart(int id) {
         Cart cart = cartRepository.findById(id).orElse(null);
-        int amount = cart.getAmount()-1;
-        if (amount<=0) {
+        int amount = cart.getAmount() - 1;
+        if (amount <= 0) {
             cartRepository.delete(cart);
         } else {
             cart.setAmount(amount);
         }
     }
+
     @Transactional
     public Cart findById(int id) {
         return cartRepository.findById(id).orElse(null);
+    }
+
+    @Transactional
+    public void deleteCart(Cart cart) {
+        cartRepository.delete(cart);
     }
 }

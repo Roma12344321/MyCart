@@ -22,7 +22,7 @@ public class CartController {
     @GetMapping("")
     public String index(Model model) {
         Person person = personService.getCurrentPerson();
-        List<Cart> cartList = cartService.getAllCarts(person);
+        List<Cart> cartList = cartService.getAllCartsForPerson(person);
         model.addAttribute("cartList",cartList);
         return "cart/index";
     }
@@ -32,7 +32,7 @@ public class CartController {
         return "redirect:/cart";
     }
 
-    @PostMapping("{id}")
+    @PostMapping("/{id}")
     public String add(@PathVariable("id") int id) {
         Person person = personService.getCurrentPerson();
         cartService.addGoodToCart(person,cartService.findById(id).getGood());

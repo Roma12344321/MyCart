@@ -49,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/webjars/**").permitAll()
                         .requestMatchers("/auth/login", "/auth/registration","/","/good/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/order/all").hasAnyRole("WORKER","ADMIN")
                         .anyRequest().hasAnyRole("USER", "ADMIN"));
         http.formLogin((form) -> form
                 .loginPage("/auth/login")

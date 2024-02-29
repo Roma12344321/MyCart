@@ -46,4 +46,7 @@ public class Person {
 
     @OneToMany(mappedBy = "person")
     private List<Cart> carts;
+
+    @OneToMany(mappedBy = "person")
+    private List<Order> orders;
 }

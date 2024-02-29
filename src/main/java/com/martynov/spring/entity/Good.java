@@ -35,6 +35,9 @@ public class Good {
     @OneToMany(mappedBy = "good")
     private List<Cart> carts;
 
+    @OneToMany(mappedBy = "good")
+    private List<Order> orders;
+
     public Good(String name, int price, String description) {
         this.name = name;
         this.price = price;

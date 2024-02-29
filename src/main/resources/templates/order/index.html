@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All orders</title>
+</head>
+<body>
+
+<div th:each="order:${orders}">
+    <p th:text="${order.person.getUsername()}"></p>
+    <p th:text="${order.good.getName()}"></p>
+    <p th:text="${order.getAddress()}"></p>
+    <p th:text="${order.getAmount()}"></p>
+</div>
+
+</body>
+</html>

@@ -17,6 +17,14 @@ CART
         <input type="submit" value="Удалить">
     </form>
     <br>
+    <form th:method="POST" th:action="@{/order/{id}(id=${cart.getId()})}">
+        <input type="submit" value="Сделать заказ">
+    </form>
 </div>
+<br>
+<br>
+<form th:method="POST" th:action="@{/order}">
+    <input type="submit" value="Сделать все заказы">
+</form>
 </body>
 </html>
