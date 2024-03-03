@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Good {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,6 +38,9 @@ public class Good {
 
     @OneToMany(mappedBy = "good")
     private List<Order> orders;
+
+    @ManyToMany(mappedBy = "goods")
+    private List<Tag> tags;
 
     public Good(String name, int price, String description) {
         this.name = name;

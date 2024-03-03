@@ -41,6 +41,12 @@ public class AdminController {
         return "redirect:/admin/good";
     }
 
+    @PatchMapping("/good/{id}")
+    public String patchGood(@PathVariable("id") int id, @ModelAttribute("good") Good good, @RequestParam("cat_id") int catId) {
+        goodService.patchGood(id,good,catId);
+        return "redirect:/admin/good";
+    }
+
     @GetMapping("/good/new")
     public String addGood(@ModelAttribute("good") Good good, @ModelAttribute("category") Category category, Model model) {
         model.addAttribute("cats", categoryService.findAll());

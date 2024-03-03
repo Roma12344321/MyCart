@@ -1,5 +1,6 @@
 package com.martynov.spring.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -7,6 +8,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import java.util.Date;
 import java.util.List;
@@ -49,4 +51,9 @@ public class Person {
 
     @OneToMany(mappedBy = "person")
     private List<Order> orders;
+
+    @OneToOne(mappedBy = "person")
+    @JsonIgnore
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    private Balance balance;
 }

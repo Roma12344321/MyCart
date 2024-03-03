@@ -23,7 +23,6 @@ public class SecurityConfig {
 
     private final PersonDetailsService personDetailsService;
 
-
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();

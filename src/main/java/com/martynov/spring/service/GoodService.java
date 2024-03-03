@@ -86,7 +86,7 @@ public class GoodService {
     }
 
     @Transactional
-    public void create(Good good,int id,MultipartFile imageFile) {
+    public void create(Good good, int id, MultipartFile imageFile) {
         good.setId(0);
         if (!imageFile.isEmpty()) {
             try {
@@ -103,5 +103,17 @@ public class GoodService {
         }
         Category categoryFromDb = categoryService.findById(id);
         save(good, categoryFromDb);
+    }
+
+    @Transactional
+    public void patchGood(int id, Good good, int catId) {
+        Good goodFromDb = findById(id);
+        Category category = categoryService.findById(catId);
+        goodFromDb.setName(good.getName());
+        goodFromDb.setPrice(good.getPrice());
+        goodFromDb.setDescription(good.getDescription());
+        goodFromDb.setCategory(good.getCategory());
+        goodFromDb.setImagePath(good.getImagePath());
+        goodFromDb.setCategory(category);
     }
 }

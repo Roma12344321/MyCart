@@ -25,7 +25,7 @@ public class OrderService {
     private static final int EMPTY_COUNT = 0;
 
     @Transactional
-    public void addOneOrder(int cartId, String address, String status) {
+    public void addOrder(int cartId, String address, String status) {
         Cart cart = cartService.findById(cartId);
         int cartAmountAfter = cart.getAmount() - 1;
         if (cartAmountAfter == EMPTY_COUNT) {

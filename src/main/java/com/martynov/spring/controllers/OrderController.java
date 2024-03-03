@@ -22,7 +22,7 @@ public class OrderController {
                                     value = "address",
                                     required = false,
                                     defaultValue = "online") String address) {
-        orderService.addOneOrder(cartId, address, "TODO");
+        orderService.addOrder(cartId, address, "TODO");
         return "redirect:/cart";
     }
 
