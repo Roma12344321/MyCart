@@ -1,5 +1,6 @@
 package com.martynov.spring.controllers;
 
+import com.martynov.spring.entity.Comment;
 import com.martynov.spring.entity.Good;
 import com.martynov.spring.entity.Person;
 import com.martynov.spring.service.CartService;
@@ -30,7 +31,7 @@ public class GoodController {
     }
 
     @GetMapping("/{id}")
-    public String showGoodById(@PathVariable("id") int id, Model model) {
+    public String showGoodById(@PathVariable("id") int id, Model model, @ModelAttribute("comment") Comment comment) {
         model.addAttribute("good", goodService.findById(id));
         return "good/show_one";
     }

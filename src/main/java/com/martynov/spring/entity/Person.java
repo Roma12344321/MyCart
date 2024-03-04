@@ -54,4 +54,7 @@ public class Person {
 
     @OneToOne(mappedBy = "person")
     private Balance balance;
+
+    @OneToMany(mappedBy = "person")
+    private List<Comment> comments;
 }

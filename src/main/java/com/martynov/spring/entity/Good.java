@@ -42,6 +42,9 @@ public class Good {
     @ManyToMany(mappedBy = "goods")
     private List<Tag> tags;
 
+    @OneToMany(mappedBy = "good")
+    private List<Comment> comments;
+
     public Good(String name, int price, String description) {
         this.name = name;
         this.price = price;

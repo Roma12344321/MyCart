@@ -4,6 +4,7 @@ import com.martynov.spring.entity.Category;
 import com.martynov.spring.entity.Good;
 import com.martynov.spring.repositories.GoodRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -45,7 +46,9 @@ public class GoodService {
 
     @Transactional
     public Good findById(int id) {
-        return goodRepository.findById(id).orElse(null);
+        Good good = goodRepository.findById(id).orElseThrow(RuntimeException::new);
+        Hibernate.initialize(good.getComments());
+        return good;
     }
 
     @Transactional

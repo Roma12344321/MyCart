@@ -16,6 +16,28 @@
     <input type="submit" th:value="'Добавить '+${good.getName()}+' в корзину'"/>
 </form>
 
+<br>
+<div>
+    <div style="background: aquamarine" th:each="comment:${good.getComments()}">
+        <p th:text="${comment.getText()}"></p>
+        <p th:text="${comment.getStar()}"></p>
+        <p th:text="${comment.getPerson().getUsername()}"></p>
+    </div>
+    <br>
+</div>
+<br>
+<br>
+<form th:method="POST" th:action="@{/comment/{id}(id=${good.getId()})}" th:object="${comment}">
+    <label for="text">Enter text: </label>
+    <input type="text" th:field="*{text}" id="text"/>
+    <div style="color:red" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">text Error</div>
+    <br/>
+    <label for="star">Enter star: </label>
+    <input type="text" th:field="*{star}" id="star"/>
+    <div style="color:red" th:if="${#fields.hasErrors('star')}" th:errors="*{star}">star Error</div>
+    <br/>
+    <input type="submit" th:value="'Написать коммент'"/>
+</form>
 
 </body>
 </html>
