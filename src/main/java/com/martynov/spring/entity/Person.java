@@ -53,7 +53,5 @@ public class Person {
     private List<Order> orders;
 
     @OneToOne(mappedBy = "person")
-    @JsonIgnore
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     private Balance balance;
 }

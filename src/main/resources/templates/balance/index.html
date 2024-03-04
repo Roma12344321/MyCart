@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Balance</title>
+</head>
+<body>
+<p th:text="'Ваш баланс: '+${balance.getSum()}"></p>
+<p>Пополнить?</p>
+<form th:method="POST" th:action="@{/balance}" th:object="${formBalance}">
+    <label for="sum">Введите сумму: </label>
+    <input type="text" th:field="*{sum}" id="sum"/>
+    <input type="submit" value="Пополнить"/>
+</form>
+</body>
+</html>

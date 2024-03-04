@@ -3,6 +3,7 @@ package com.martynov.spring.controllers;
 import com.martynov.spring.entity.Person;
 import com.martynov.spring.service.OrderService;
 import com.martynov.spring.service.PersonService;
+import com.martynov.spring.util.NotEnoughMoneyException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +23,11 @@ public class OrderController {
                                     value = "address",
                                     required = false,
                                     defaultValue = "online") String address) {
-        orderService.addOrder(cartId, address, "TODO");
+        try {
+            orderService.addOrder(cartId, address, "TODO", 1);
+        } catch (NotEnoughMoneyException e) {
+            System.out.println("Not enough money");
+        }
         return "redirect:/cart";
     }
 

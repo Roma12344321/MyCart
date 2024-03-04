@@ -1,9 +1,8 @@
 package com.martynov.spring.service;
 
-import com.martynov.spring.entity.Cart;
-import com.martynov.spring.entity.Order;
-import com.martynov.spring.entity.Person;
+import com.martynov.spring.entity.*;
 import com.martynov.spring.repositories.OrderRepository;
+import com.martynov.spring.util.NotEnoughMoneyException;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
@@ -20,27 +19,35 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartService cartService;
     private final EntityManager entityManager;
+    private final BalanceService balanceService;
 
     private static final int INITIAL_AMOUNT = 1;
     private static final int EMPTY_COUNT = 0;
 
     @Transactional
-    public void addOrder(int cartId, String address, String status) {
+    public void addOrder(int cartId, String address, String status, int count) {
         Cart cart = cartService.findById(cartId);
-        int cartAmountAfter = cart.getAmount() - 1;
+        Person person = cart.getPerson();
+        Good good = cart.getGood();
+        Balance balance = balanceService.findByPerson(person);
+        checkBalance(balance, good.getPrice());
+        makeBalance(balance, good.getPrice());
+        Session session = entityManager.unwrap(Session.class);
+        Order orderFromDb = getOrderFromDb(session, cart);
+        if (orderFromDb == null) {
+            Order order = new Order(person, good, count, address, status, new Date());
+            orderRepository.save(order);
+            balanceService.save(balance);
+        } else {
+            int amount = orderFromDb.getAmount() + count;
+            orderFromDb.setAmount(amount);
+            balanceService.save(balance);
+        }
+        int cartAmountAfter = cart.getAmount() - count;
         if (cartAmountAfter == EMPTY_COUNT) {
             cartService.deleteCart(cart);
         } else {
             cart.setAmount(cartAmountAfter);
-        }
-        Session session = entityManager.unwrap(Session.class);
-        Order orderFromDb = getOrderFromDb(session, cart);
-        if (orderFromDb == null) {
-            Order order = new Order(cart.getPerson(), cart.getGood(), INITIAL_AMOUNT, address, status, new Date());
-            orderRepository.save(order);
-        } else {
-            int amount = orderFromDb.getAmount() + 1;
-            orderFromDb.setAmount(amount);
         }
     }
 
@@ -49,10 +56,28 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
+    private void makeBalance(Balance balance, int price) {
+        int sumBefore = balance.getSum();
+        balance.setSum(sumBefore - price);
+    }
+
+    private void checkBalance(Balance balance, int price) {
+        if (balance.getSum() < price) {
+            throw new NotEnoughMoneyException();
+        }
+    }
+
     @Transactional
     public void addAllOrders(Person person, String address, String status) {
         List<Cart> carts = cartService.getAllCartsForPerson(person);
         Session session = entityManager.unwrap(Session.class);
+        Balance balance = balanceService.findByPerson(person);
+        int price = 0;
+        for (Cart cart : carts) {
+            price += (cart.getAmount() * cart.getGood().getPrice());
+        }
+        checkBalance(balance, price);
+        makeBalance(balance, price);
         for (Cart cart : carts) {
             Order orderFromDb = getOrderFromDb(session, cart);
             if (orderFromDb == null) {
