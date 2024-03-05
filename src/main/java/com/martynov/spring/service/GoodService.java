@@ -3,8 +3,10 @@ package com.martynov.spring.service;
 import com.martynov.spring.entity.Category;
 import com.martynov.spring.entity.Good;
 import com.martynov.spring.repositories.GoodRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -35,16 +37,18 @@ public class GoodService {
 
     private final GoodRepository goodRepository;
     private final CategoryService categoryService;
+    private final EntityManager entityManager;
 
     @Value("${image_dir}")
     private String IMAGE_DIR;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Good> findAllGood() {
-        return goodRepository.findAll();
+        Session session = entityManager.unwrap(Session.class);
+        return session.createQuery("select g from Good g left join fetch g.likes",Good.class).getResultList();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Good findById(int id) {
         Good good = goodRepository.findById(id).orElseThrow(RuntimeException::new);
         Hibernate.initialize(good.getComments());

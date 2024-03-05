@@ -19,7 +19,7 @@ public class BalanceService {
         balanceRepository.save(balance);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Balance getCurrentBalance() {
         Person person = personService.getCurrentPerson();
         return findByPerson(person);
@@ -34,7 +34,7 @@ public class BalanceService {
         person.setBalance(balanceFromDb);
         save(balanceFromDb);
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public Balance findByPerson(Person person) {
         return balanceRepository.findByPerson(person);
     }

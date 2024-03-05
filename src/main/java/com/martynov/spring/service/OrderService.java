@@ -20,8 +20,6 @@ public class OrderService {
     private final CartService cartService;
     private final EntityManager entityManager;
     private final BalanceService balanceService;
-
-    private static final int INITIAL_AMOUNT = 1;
     private static final int EMPTY_COUNT = 0;
 
     @Transactional
@@ -32,16 +30,15 @@ public class OrderService {
         Balance balance = balanceService.findByPerson(person);
         checkBalance(balance, good.getPrice());
         makeBalance(balance, good.getPrice());
+        balanceService.save(balance);
         Session session = entityManager.unwrap(Session.class);
         Order orderFromDb = getOrderFromDb(session, cart);
         if (orderFromDb == null) {
             Order order = new Order(person, good, count, address, status, new Date());
             orderRepository.save(order);
-            balanceService.save(balance);
         } else {
             int amount = orderFromDb.getAmount() + count;
             orderFromDb.setAmount(amount);
-            balanceService.save(balance);
         }
         int cartAmountAfter = cart.getAmount() - count;
         if (cartAmountAfter == EMPTY_COUNT) {

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Scanner;
 
 
 @Service
@@ -44,7 +45,6 @@ public class CartService {
     }
 
 
-
     @Transactional(readOnly = true)
     public List<Cart> getAllCartsForPerson(Person person) {
         return cartRepository.findByPerson(person);
@@ -52,7 +52,7 @@ public class CartService {
 
     @Transactional
     public void deleteOneCart(int id) {
-        Cart cart = cartRepository.findById(id).orElse(null);
+        Cart cart = cartRepository.findById(id).orElseThrow(RuntimeException::new);
         int amount = cart.getAmount() - 1;
         if (amount <= 0) {
             cartRepository.delete(cart);
@@ -61,7 +61,7 @@ public class CartService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Cart findById(int id) {
         return cartRepository.findById(id).orElse(null);
     }

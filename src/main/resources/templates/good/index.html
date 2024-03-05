@@ -44,6 +44,7 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${good.getName()}">Card title</h5>
+                    <p th:text="${good.getLikes().size()}" class="card-text"></p>
                     <p th:text="${good.getDescription()}" class="card-text">Some quick example text to build on the card
                         title and make up the bulk of the card's content.</p>
                     <a th:href="@{good/{id}(id=${good.getId()})}" class="btn btn-primary">Подробно</a>

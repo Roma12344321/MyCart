@@ -57,4 +57,7 @@ public class Person {
 
     @OneToMany(mappedBy = "person")
     private List<Comment> comments;
+
+    @OneToMany(mappedBy = "person")
+    private List<Like> likes;
 }

@@ -27,7 +27,7 @@ public class CommentService {
         comment.setDate(new Date());
         commentRepository.save(comment);
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Comment> getAllCommentForGood(Good good) {
         return commentRepository.findByGood(good);
     }

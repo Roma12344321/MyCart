@@ -18,7 +18,7 @@ public class CategoryService {
     public List<Category> findAll() {
         return categoryRepository.findAll();
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public Category findById(int id) {
         return categoryRepository.findById(id).orElse(null);
     }

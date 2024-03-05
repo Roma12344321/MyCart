@@ -13,6 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -25,8 +27,9 @@ public class GoodController {
 
     @GetMapping("")
     public String showAllGood(@RequestParam(value = "success", defaultValue = "false") Boolean success, Model model) {
+        List<Good> goodList = goodService.findAllGood();
         model.addAttribute("success", success);
-        model.addAttribute("goods", goodService.findAllGood());
+        model.addAttribute("goods", goodList);
         return "good/index";
     }
 
@@ -39,15 +42,15 @@ public class GoodController {
     @PostMapping("/{id}")
     public String addToCart(@PathVariable("id") int id) {
         Person person = personService.getCurrentPerson();
-        if (person!=null){
+        if (person != null) {
             Good good = goodService.findById(id);
             cartService.addGoodToCart(person, good);
             return "redirect:/good?success=true";
-        }
-        else {
+        } else {
             return "redirect:/good?success=false";
         }
     }
+
     @GetMapping("/image/{id}")
     @ResponseBody
     public ResponseEntity<Resource> getGoodImage(@PathVariable int id) {

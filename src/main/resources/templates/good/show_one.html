@@ -15,6 +15,11 @@
 <form th:method="POST" th:action="@{/good/{id}(id=${good.getId()})}">
     <input type="submit" th:value="'Добавить '+${good.getName()}+' в корзину'"/>
 </form>
+<br>
+
+<form th:method="POST" th:action="@{/like/{id}(id=${good.getId()})}">
+    <input type="submit" th:value="'Поставить лайк'"/>
+</form>
 
 <br>
 <div>
