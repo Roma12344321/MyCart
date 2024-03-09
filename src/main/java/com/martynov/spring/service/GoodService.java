@@ -41,6 +41,7 @@ public class GoodService {
 
     @Value("${image_dir}")
     private String IMAGE_DIR;
+    private static final int INITIAL_ID = 0;
 
     @Transactional(readOnly = true)
     public List<Good> findAllGood() {
@@ -94,7 +95,7 @@ public class GoodService {
 
     @Transactional
     public void create(Good good, int id, MultipartFile imageFile) {
-        good.setId(0);
+        good.setId(INITIAL_ID);
         if (!imageFile.isEmpty()) {
             try {
                 String uploadDir = IMAGE_DIR;

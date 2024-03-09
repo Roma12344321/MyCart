@@ -11,9 +11,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -22,6 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final PersonDetailsService personDetailsService;
+    private final JWTFilter jwtFilter;
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -41,15 +45,29 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain apiFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        http
+                .securityMatcher("/api/**")
+                .csrf(AbstractHttpConfigurer::disable)
+                .authenticationManager(authenticationManager)
+                .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/api/auth/login", "/api/auth/registration").permitAll()
+                        .anyRequest().hasAnyRole("USER", "ADMIN", "WORKER"))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    public SecurityFilterChain webFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
         http
                 .authenticationManager(authenticationManager)
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/css/**", "/js/**", "/img/**", "/webjars/**").permitAll()
-                        .requestMatchers("/auth/login", "/auth/registration","/","/good/**").permitAll()
+                        .requestMatchers("/auth/login", "/auth/registration", "/", "/good/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/order/all").hasAnyRole("WORKER","ADMIN")
-                        .anyRequest().hasAnyRole("USER", "ADMIN"));
+                        .requestMatchers("/order/all").hasAnyRole("WORKER", "ADMIN")
+                        .anyRequest().hasAnyRole("USER", "ADMIN", "WORKER"));
         http.formLogin((form) -> form
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/process_login")
