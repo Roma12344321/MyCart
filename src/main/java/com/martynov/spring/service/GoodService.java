@@ -46,7 +46,11 @@ public class GoodService {
     @Transactional(readOnly = true)
     public List<Good> findAllGood() {
         Session session = entityManager.unwrap(Session.class);
-        return session.createQuery("select g from Good g left join fetch g.likes",Good.class).getResultList();
+        List<Good> goodList = session.createQuery("select g from Good g left join fetch g.likes",Good.class).getResultList();
+        for (Good good:goodList) {
+            good.setLikeCount(good.getLikes().size());
+        }
+        return goodList;
     }
 
     @Transactional(readOnly = true)
@@ -54,6 +58,11 @@ public class GoodService {
         Good good = goodRepository.findById(id).orElseThrow(RuntimeException::new);
         Hibernate.initialize(good.getComments());
         return good;
+    }
+
+    @Transactional(readOnly = true)
+    public Good findByIdWithOutComments(int id) {
+        return goodRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     @Transactional
