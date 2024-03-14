@@ -27,6 +27,19 @@ public class CommentService {
         comment.setDate(new Date());
         commentRepository.save(comment);
     }
+
+    @Transactional
+    public int deleteCommentAndReturnGoodId(int commentId) {
+        Person person = personService.getCurrentPerson();
+        Comment comment = commentRepository.findById(commentId).orElseThrow(RuntimeException::new);
+        if (comment.getPerson().getUsername().equals(person.getUsername())) {
+            commentRepository.delete(comment);
+        } else {
+            throw new RuntimeException();
+        }
+        return comment.getGood().getId();
+    }
+
     @Transactional(readOnly = true)
     public List<Comment> getAllCommentForGood(Good good) {
         return commentRepository.findByGood(good);

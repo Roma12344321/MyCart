@@ -17,8 +17,8 @@
     </div>
     <br/>
     <label for="mail">Введите email: </label>
-    <input type="text" th:field="*{getEmail}" id="mail"/>
-    <div style="color:red" th:if="${#fields.hasErrors('mail')}" th:errors="*{getEmail}">Email Error</div>
+    <input type="text" th:field="*{email}" id="mail"/>
+    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
     <br/>
     <label for="password">Введите пароль: </label>
     <input type="password" th:field="*{password}" id="password"/>

@@ -77,7 +77,7 @@ public class GoodService {
         goodRepository.deleteById(id);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseEntity<Resource> getGoodImage(@PathVariable int id) {
         Good good = findById(id);
         if (good != null && good.getImagePath() != null) {

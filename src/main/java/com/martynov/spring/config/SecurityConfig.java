@@ -2,7 +2,6 @@ package com.martynov.spring.config;
 
 import com.martynov.spring.service.PersonDetailsService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,7 +51,7 @@ public class SecurityConfig {
                 .authenticationManager(authenticationManager)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/auth/registration").permitAll()
-                        .anyRequest().hasAnyRole("USER", "ADMIN", "WORKER"))
+                        .anyRequest().hasAnyRole("USER", "ADMIN"))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -67,7 +66,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login", "/auth/registration", "/", "/good/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/order/all").hasAnyRole("WORKER", "ADMIN")
-                        .anyRequest().hasAnyRole("USER", "ADMIN", "WORKER"));
+                        .anyRequest().hasAnyRole("USER", "ADMIN"));
         http.formLogin((form) -> form
                 .loginPage("/auth/login")
                 .loginProcessingUrl("/process_login")
