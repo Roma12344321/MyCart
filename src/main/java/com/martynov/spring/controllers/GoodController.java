@@ -37,7 +37,9 @@ public class GoodController {
     @GetMapping("/{id}")
     public String showGoodById(@PathVariable("id") int id, Model model, @ModelAttribute("comment") Comment comment) {
         model.addAttribute("good", goodService.findById(id));
-        model.addAttribute("person",personService.getCurrentPerson());
+        try{
+            model.addAttribute("person",personService.getCurrentPerson());
+        } catch (Exception e) {}
         return "good/show_one";
     }
 

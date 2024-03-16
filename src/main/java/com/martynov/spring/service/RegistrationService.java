@@ -26,10 +26,9 @@ public class RegistrationService {
         person.setRole(Role.ROLE_USER);
         person.setCreatedAt(new Date());
         person.setPassword(encodedPassword);
-        Balance balance = new Balance(0);
-        balanceService.save(balance);
-        person.setBalance(balance);
-        balance.setPerson(person);
         peopleRepository.save(person);
+        Balance balance = new Balance(0);
+        balance.setPerson(person);
+        balanceService.save(balance);
     }
 }
