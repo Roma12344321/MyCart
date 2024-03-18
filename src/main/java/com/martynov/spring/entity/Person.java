@@ -30,7 +30,7 @@ public class Person {
     private String username;
 
     @Column(name = "year")
-    @Min(value = 1900, message = "Некорректный год")
+    @Min(value = 1901, message = "Некорректный год")
     private int year;
 
     @Column(name = "mail")

@@ -11,5 +11,6 @@ public class GoodDto {
     private int price;
     private String description;
     private int likeCount;
+    private int commentCount;
     private CategoryDto category;
 }

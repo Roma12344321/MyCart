@@ -43,7 +43,9 @@ public class OrderController {
             required = false,
             defaultValue = "online") String address) {
         Person person = personService.getCurrentPerson();
-        orderService.addAllOrders(person, address, "TODO");
+        try {
+            orderService.addAllOrders(person, address, "TODO");
+        } catch (Exception e){}
         return "redirect:/cart";
     }
 }

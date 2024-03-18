@@ -21,6 +21,6 @@ public class PersonDto {
     @Size(min = 2, max = 120, message = "Некорректный email")
     private String email;
 
-    @Min(value = 1900, message = "Некорректный год")
+    @Min(value = 1901, message = "Некорректный год")
     private int year;
 }

@@ -10,6 +10,7 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,10 +48,35 @@ public class GoodService {
     @Transactional(readOnly = true)
     public List<Good> findAllGood() {
         Session session = entityManager.unwrap(Session.class);
-        List<Good> goodList = session.createQuery("select g from Good g left join fetch g.likes",Good.class).getResultList();
-        for (Good good:goodList) {
+        List<Good> goodList = session.createQuery("select g from Good g left join fetch g.likes", Good.class).getResultList();
+        for (Good good : goodList) {
             good.setLikeCount(good.getLikes().size());
         }
+        return goodList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Good> findAllGoodWithCommentAndLikeCount(int page, int goodPerPage) {
+        Session session = entityManager.unwrap(Session.class);
+        List<Object[]> resultList = session.createQuery(
+                        "SELECT g, " +
+                                "(SELECT COUNT(l) FROM Like l WHERE l.good.id = g.id), " +
+                                "(SELECT COUNT(c) FROM Comment c WHERE c.good.id = g.id) " +
+                                "FROM Good g left join fetch g.category",
+                        Object[].class
+                )
+                .setFirstResult(page * goodPerPage)
+                .setMaxResults(goodPerPage)
+                .getResultList();
+
+        List<Good> goodList = new ArrayList<>();
+        for (Object[] result : resultList) {
+            Good good = (Good) result[0];
+            good.setLikeCount(((Long) result[1]).intValue());
+            good.setCommentCount(((Long) result[2]).intValue());
+            goodList.add(good);
+        }
+
         return goodList;
     }
 
@@ -61,8 +88,24 @@ public class GoodService {
     }
 
     @Transactional(readOnly = true)
-    public Good findByIdWithOutComments(int id) {
-        return goodRepository.findById(id).orElseThrow(RuntimeException::new);
+    public Good findByIdWithOutComments(int id) throws RuntimeException {
+        Session session = entityManager.unwrap(Session.class);
+        Object[] result = session.createQuery(
+                        "SELECT g, " +
+                                "(SELECT COUNT(l) FROM Like l WHERE l.good.id =:goodId), " +
+                                "(SELECT COUNT(c) FROM Comment c WHERE c.good.id =:goodId) " +
+                                "FROM Good g left join fetch g.category where g.id=:goodId",
+                        Object[].class
+                ).setParameter("goodId", id)
+                .getSingleResultOrNull();
+
+        if (result == null) {
+            throw new RuntimeException();
+        }
+        Good good = (Good) result[0];
+        good.setLikeCount(((Long) result[1]).intValue());
+        good.setCommentCount(((Long) result[2]).intValue());
+        return good;
     }
 
     @Transactional

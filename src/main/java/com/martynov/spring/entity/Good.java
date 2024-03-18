@@ -27,7 +27,7 @@ public class Good {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "cat_id",referencedColumnName = "id")
+    @JoinColumn(name = "cat_id", referencedColumnName = "id")
     private Category category;
 
     @Column(name = "image_path")
@@ -50,6 +50,9 @@ public class Good {
 
     @Transient
     private int likeCount;
+
+    @Transient
+    private int commentCount;
 
     public Good(String name, int price, String description) {
         this.name = name;

@@ -12,10 +12,11 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class GoodMapper {
+
     private final ModelMapper modelMapper;
 
     public List<GoodDto> mapGoodListDoGoodDtoList(List<Good> goodList) {
-        return goodList.stream().map(this::mapGoodToGoodDto).collect(Collectors.toList());
+        return goodList.stream().map(this::mapGoodToGoodDto).toList();
     }
 
     public GoodDto mapGoodToGoodDto(Good good) {

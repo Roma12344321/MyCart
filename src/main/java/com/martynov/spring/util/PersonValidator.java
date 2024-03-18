@@ -7,6 +7,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 @Component
 public class PersonValidator implements Validator {
     private final PeopleRepository peopleRepository;
