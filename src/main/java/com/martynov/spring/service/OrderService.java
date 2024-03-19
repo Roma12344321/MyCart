@@ -66,7 +66,7 @@ public class OrderService {
 
     @Transactional
     public void addAllOrders(Person person, String address, String status) {
-        List<Cart> carts = cartService.getAllCartsForPerson(person);
+        List<Cart> carts = cartService.getAllCartsForPerson();
         Session session = entityManager.unwrap(Session.class);
         Balance balance = balanceService.findByPerson(person);
         int price = 0;

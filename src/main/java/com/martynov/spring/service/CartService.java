@@ -20,10 +20,17 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final EntityManager entityManager;
+    private final PersonService personService;
+    private final GoodService goodService;
     private static final int INITIAL_AMOUNT = 1;
 
     @Transactional
-    public void addGoodToCart(Person person, Good good) {
+    public void addGoodToCart(int goodId) {
+        Person person = personService.getCurrentPerson();
+        if (person == null) {
+            throw new RuntimeException();
+        }
+        Good good = goodService.findByIdWithOutComments(goodId);
         Session session = entityManager.unwrap(Session.class);
         Cart cartFromDb = session.createQuery(
                         "SELECT c FROM Cart c WHERE c.person.id=:personId AND c.good.id=:goodId",
@@ -46,8 +53,13 @@ public class CartService {
 
 
     @Transactional(readOnly = true)
-    public List<Cart> getAllCartsForPerson(Person person) {
-        return cartRepository.findByPerson(person);
+    public List<Cart> getAllCartsForPerson() {
+        Person person = personService.getCurrentPerson();
+        List<Cart> cartList = cartRepository.findByPerson(person);
+        for (Cart cart : cartList) {
+            cart.setGood(goodService.findByIdWithOutComments(cart.getGood().getId()));
+        }
+        return cartList;
     }
 
     @Transactional

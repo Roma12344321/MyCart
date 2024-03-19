@@ -32,7 +32,7 @@ public class LikeService {
     @Transactional
     public void makeLike(int goodId) {
         Person person = personService.getCurrentPerson();
-        Good good = goodService.findById(goodId);
+        Good good = goodService.findByIdWithComments(goodId);
         Like likeFromDb = findByPersonAndGood(person, good);
         if (likeFromDb == null) {
             Like like = new Like(person, good);

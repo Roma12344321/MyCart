@@ -22,7 +22,7 @@ public class CommentService {
     @Transactional
     public void createComment(int goodId, String text, int star) {
         Person person = personService.getCurrentPerson();
-        Good good = goodService.findById(goodId);
+        Good good = goodService.findByIdWithComments(goodId);
         Comment comment = new Comment(text, star, person, good);
         comment.setDate(new Date());
         commentRepository.save(comment);

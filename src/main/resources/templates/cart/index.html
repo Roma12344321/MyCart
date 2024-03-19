@@ -10,7 +10,7 @@ CART
     <p th:text="${cart.good.name}"></p>
     <p th:text="${cart.good.price}"></p>
     <p th:text="${cart.amount}"></p>
-    <form th:method="POST" th:action="@{/cart/{id}(id=${cart.getId()})}">
+    <form th:method="POST" th:action="@{/cart/{id}(id=${cart.good.getId()})}">
         <input type="submit" value="Добавить">
     </form>
     <form th:method="DELETE" th:action="@{/cart/{id}(id=${cart.getId()})}">

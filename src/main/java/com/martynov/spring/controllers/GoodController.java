@@ -28,7 +28,7 @@ public class GoodController {
 
     @GetMapping("")
     public String showAllGood(@RequestParam(value = "success", defaultValue = "false") Boolean success, Model model) {
-        List<Good> goodList = goodService.findAllGood();
+        List<Good> goodList = goodService.findAllGoodWithCommentAndLikeCount(0, 100);
         model.addAttribute("success", success);
         model.addAttribute("goods", goodList);
         return "good/index";
@@ -36,24 +36,20 @@ public class GoodController {
 
     @GetMapping("/{id}")
     public String showGoodById(@PathVariable("id") int id, Model model, @ModelAttribute("comment") Comment comment) {
-        model.addAttribute("good", goodService.findById(id));
-        try{
-            model.addAttribute("person",personService.getCurrentPerson());
-        } catch (Exception e) {}
+        model.addAttribute("good", goodService.findByIdWithComments(id));
+        try {
+            model.addAttribute("person", personService.getCurrentPerson());
+        } catch (Exception e) {
+            model.addAttribute("person", null);
+        }
         return "good/show_one";
     }
 
     @PreAuthorize("!hasRole('ROLE_WORKER')")
     @PostMapping("/{id}")
     public String addToCart(@PathVariable("id") int id) {
-        Person person = personService.getCurrentPerson();
-        if (person != null) {
-            Good good = goodService.findById(id);
-            cartService.addGoodToCart(person, good);
-            return "redirect:/good?success=true";
-        } else {
-            return "redirect:/good?success=false";
-        }
+        cartService.addGoodToCart(id);
+        return "redirect:/good?success=true";
     }
 
     @GetMapping("/image/{id}")

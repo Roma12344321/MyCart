@@ -25,13 +25,13 @@ public class AdminController {
 
     @GetMapping("/good")
     public String showAllGood(Model model) {
-        model.addAttribute("goods",goodService.findAllGood());
+        model.addAttribute("goods",goodService.findAllGoodWithCommentAndLikeCount(0,100));
         return "admin/goods";
     }
 
     @GetMapping("/good/{id}")
     public String showGoodById(@PathVariable("id") int id, Model model) {
-        model.addAttribute("good", goodService.findById(id));
+        model.addAttribute("good", goodService.findByIdWithComments(id));
         return "admin/show_one";
     }
 

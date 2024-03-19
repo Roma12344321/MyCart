@@ -27,9 +27,11 @@
         <p th:text="${comment.getText()}"></p>
         <p th:text="${comment.getStar()}"></p>
         <p th:text="${comment.getPerson().getUsername()}"></p>
+        <div th:if="${person!=null}">
         <form th:if="${person.getUsername().equals(comment.getPerson().getUsername())}" th:method="DELETE" th:action="@{/comment/{id}(id=${comment.getId()})}">
             <input type="submit" value="Удалить комментарий"/>
         </form>
+        </div>
     </div>
     <br>
 </div>

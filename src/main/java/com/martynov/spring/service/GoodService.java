@@ -10,15 +10,11 @@ import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -31,8 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static org.apache.coyote.http11.Constants.a;
-
 @Service
 @RequiredArgsConstructor
 public class GoodService {
@@ -44,16 +38,6 @@ public class GoodService {
     @Value("${image_dir}")
     private String IMAGE_DIR;
     private static final int INITIAL_ID = 0;
-
-    @Transactional(readOnly = true)
-    public List<Good> findAllGood() {
-        Session session = entityManager.unwrap(Session.class);
-        List<Good> goodList = session.createQuery("select g from Good g left join fetch g.likes", Good.class).getResultList();
-        for (Good good : goodList) {
-            good.setLikeCount(good.getLikes().size());
-        }
-        return goodList;
-    }
 
     @Transactional(readOnly = true)
     public List<Good> findAllGoodWithCommentAndLikeCount(int page, int goodPerPage) {
@@ -81,14 +65,17 @@ public class GoodService {
     }
 
     @Transactional(readOnly = true)
-    public Good findById(int id) {
-        Good good = goodRepository.findById(id).orElseThrow(RuntimeException::new);
+    public Good findByIdWithComments(int id) {
+        Good good = findById(id);
         Hibernate.initialize(good.getComments());
         return good;
     }
 
     @Transactional(readOnly = true)
     public Good findByIdWithOutComments(int id) throws RuntimeException {
+        return findById(id);
+    }
+    private Good findById(int id) {
         Session session = entityManager.unwrap(Session.class);
         Object[] result = session.createQuery(
                         "SELECT g, " +
