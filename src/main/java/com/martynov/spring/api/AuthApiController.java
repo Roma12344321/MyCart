@@ -3,7 +3,7 @@ package com.martynov.spring.api;
 import com.martynov.spring.dto.AuthenticationDto;
 import com.martynov.spring.dto.PersonDto;
 import com.martynov.spring.entity.Person;
-import com.martynov.spring.mapper.PersonMapper;
+import com.martynov.spring.mapper.Mapper;
 import com.martynov.spring.security.JWTUtil;
 import com.martynov.spring.service.RegistrationService;
 import com.martynov.spring.util.PersonValidator;
@@ -28,13 +28,13 @@ public class AuthApiController {
     private final PersonValidator personValidator;
     private final RegistrationService registrationService;
     private final JWTUtil jwtUtil;
-    private final PersonMapper personMapper;
+    private final Mapper<Person,PersonDto> personMapper;
     private final AuthenticationManager authenticationManager;
 
 
     @PostMapping("/registration")
     public Map<String, String> performRegistration(@RequestBody @Valid PersonDto personDto, BindingResult bindingResult) {
-        Person person = personMapper.mapPersonDtoToPerson(personDto);
+        Person person = personMapper.mapDtoToEntity(personDto,Person.class);
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) {
             return Map.of("message", "error");

@@ -7,13 +7,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "comment")
 @NoArgsConstructor
 @Data
-public class Comment {
+public class Comment implements Serializable {
 
     @Id
     @Column(name = "id")

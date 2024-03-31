@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "orders")
 @Data
 @NoArgsConstructor
-public class Order {
+public class Order implements Serializable {
 
     @Column(name = "id")
     @Id

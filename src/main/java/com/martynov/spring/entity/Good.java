@@ -4,13 +4,14 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "good")
 @Data
 @NoArgsConstructor
-public class Good {
+public class Good implements Serializable {
 
     @Id
     @Column(name = "id")

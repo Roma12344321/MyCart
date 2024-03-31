@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "balance")
 @NoArgsConstructor
 @Data
-public class Balance {
+public class Balance implements Serializable {
 
     @Id
     @Column(name = "id")

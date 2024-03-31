@@ -5,13 +5,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "category")
 @NoArgsConstructor
 @Data
-public class Category {
+public class Category implements Serializable {
 
     @Column(name = "id")
     @Id

@@ -2,13 +2,9 @@ package com.martynov.spring.api;
 
 import com.martynov.spring.dto.CartDto;
 import com.martynov.spring.entity.Cart;
-import com.martynov.spring.entity.Person;
-import com.martynov.spring.mapper.CartMapper;
+import com.martynov.spring.mapper.Mapper;
 import com.martynov.spring.service.CartService;
-import com.martynov.spring.service.PersonService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +16,12 @@ import java.util.Map;
 public class CartApiController {
 
     private final CartService cartService;
-    private final CartMapper cartMapper;
+    private final Mapper<Cart,CartDto> cartMapper;
 
     @GetMapping()
     public List<CartDto> index() {
         List<Cart> cartList = cartService.getAllCartsForPerson();
-        return cartMapper.mapCartListToCartDtoList(cartList);
+        return cartMapper.mapEntityListToDtoList(cartList, CartDto.class);
     }
 
     @DeleteMapping("/{id}")

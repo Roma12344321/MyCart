@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
@@ -40,6 +41,7 @@ public class GoodService {
     private static final int INITIAL_ID = 0;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "goods", key = "#page + '_' + #goodPerPage")
     public List<Good> findAllGoodWithCommentAndLikeCount(int page, int goodPerPage) {
         Session session = entityManager.unwrap(Session.class);
         List<Object[]> resultList = session.createQuery(
@@ -60,7 +62,6 @@ public class GoodService {
             good.setCommentCount(((Long) result[2]).intValue());
             goodList.add(good);
         }
-
         return goodList;
     }
 

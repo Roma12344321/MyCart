@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "likes")
 @NoArgsConstructor
 @Data
-public class Like {
+public class Like implements Serializable {
 
     @Id
     @Column(name = "id")
