@@ -88,6 +88,11 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
+    public Long getSumOfAmountOfOrders() {
+        return entityManager.createQuery("select sum(o.amount) from Order o", Long.class).getSingleResult();
+    }
+
     private Order getOrderFromDb(Session session, Cart cart) {
         return session.createQuery(
                         "SELECT o FROM Order o WHERE o.person.id=:personId AND o.good.id=:goodId",

@@ -34,6 +34,7 @@ public class OrderController {
     @GetMapping("/all")
     public String getAllOrders(Model model) {
         model.addAttribute("orders", orderService.findAll());
+        model.addAttribute("sum_of_amount",orderService.getSumOfAmountOfOrders());
         return "order/index";
     }
 

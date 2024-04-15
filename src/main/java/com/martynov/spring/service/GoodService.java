@@ -8,11 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +25,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -73,9 +73,11 @@ public class GoodService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "good_by_id", key = "#id")
     public Good findByIdWithOutComments(int id) throws RuntimeException {
         return findById(id);
     }
+
     private Good findById(int id) {
         Session session = entityManager.unwrap(Session.class);
         Object[] result = session.createQuery(
@@ -104,33 +106,42 @@ public class GoodService {
     }
 
     @Transactional
+    @CacheEvict(value = {"goods", "good_by_id"}, allEntries = true)
     public void deleteById(int id) {
-        goodRepository.deleteById(id);
+        Optional<Good> goodOptional = goodRepository.findById(id);
+        if (goodOptional.isPresent()) {
+            Good good = goodOptional.get();
+            String imagePath = good.getImagePath();
+            if (imagePath != null && !imagePath.isEmpty()) {
+                try {
+                    Files.deleteIfExists(Paths.get(imagePath));
+                } catch (IOException e) {
+                    System.err.println("Failed to delete image file: " + e.getMessage());
+                }
+            }
+            goodRepository.deleteById(id);
+        } else {
+            System.err.println("Good with ID " + id + " not found");
+        }
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<Resource> getGoodImage(@PathVariable int id) {
+    public Resource getGoodImage(@PathVariable int id) {
         Good good = findById(id);
         if (good != null && good.getImagePath() != null) {
             try {
                 Path filePath = Paths.get(good.getImagePath());
                 Resource resource = new UrlResource(filePath.toUri());
                 if (resource.exists() || resource.isReadable()) {
-                    return ResponseEntity
-                            .ok()
-                            .contentType(MediaType.IMAGE_JPEG)
-                            .body(resource);
+                    return resource;
                 } else {
-                    return ResponseEntity
-                            .badRequest()
-                            .contentType(MediaType.IMAGE_JPEG)
-                            .body(null);
+                    return null;
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
         }
-        return ResponseEntity.notFound().build();
+        return null;
     }
 
     @Transactional

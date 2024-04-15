@@ -8,6 +8,7 @@ import com.martynov.spring.service.GoodService;
 import com.martynov.spring.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -55,6 +56,9 @@ public class GoodController {
     @GetMapping("/image/{id}")
     @ResponseBody
     public ResponseEntity<Resource> getGoodImage(@PathVariable int id) {
-        return goodService.getGoodImage(id);
+        var resource = goodService.getGoodImage(id);
+         return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(resource);
     }
 }
