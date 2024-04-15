@@ -82,3 +82,6 @@ CREATE TABLE likes
 );
 
 CREATE INDEX idx_likes_good_id ON likes(good_id);
+
+
+

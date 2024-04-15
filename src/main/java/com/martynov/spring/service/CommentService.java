@@ -5,6 +5,7 @@ import com.martynov.spring.entity.Good;
 import com.martynov.spring.entity.Person;
 import com.martynov.spring.repositories.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,7 @@ public class CommentService {
     private final GoodService goodService;
 
     @Transactional
+    @CacheEvict(value = {"good_by_id_with_comment", "good_by_id", "goods"}, allEntries = true)
     public void createComment(int goodId, String text, int star) {
         Person person = personService.getCurrentPerson();
         Good good = goodService.findByIdWithComments(goodId);
@@ -29,6 +31,7 @@ public class CommentService {
     }
 
     @Transactional
+    @CacheEvict(value = {"good_by_id_with_comment", "good_by_id", "goods"}, allEntries = true)
     public int deleteCommentAndReturnGoodId(int commentId) {
         Person person = personService.getCurrentPerson();
         Comment comment = commentRepository.findById(commentId).orElseThrow(RuntimeException::new);

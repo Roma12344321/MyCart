@@ -8,6 +8,8 @@ import com.martynov.spring.util.LikeAlreadyExistException;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +32,7 @@ public class LikeService {
     }
 
     @Transactional
+    @CacheEvict(value = {"good_by_id_with_comment", "good_by_id", "goods"}, allEntries = true)
     public void makeLike(int goodId) {
         Person person = personService.getCurrentPerson();
         Good good = goodService.findByIdWithComments(goodId);

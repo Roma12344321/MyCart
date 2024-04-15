@@ -66,6 +66,7 @@ public class GoodService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "good_by_id_with_comment", key = "#id")
     public Good findByIdWithComments(int id) {
         Good good = findById(id);
         Hibernate.initialize(good.getComments());
@@ -106,7 +107,7 @@ public class GoodService {
     }
 
     @Transactional
-    @CacheEvict(value = {"goods", "good_by_id"}, allEntries = true)
+    @CacheEvict(value = {"goods", "good_by_id", "good_by_id_with_comment"}, allEntries = true)
     public void deleteById(int id) {
         Optional<Good> goodOptional = goodRepository.findById(id);
         if (goodOptional.isPresent()) {
@@ -145,6 +146,7 @@ public class GoodService {
     }
 
     @Transactional
+    @CacheEvict(value = {"goods", "good_by_id", "good_by_id_with_comment"}, allEntries = true)
     public void create(Good good, int id, MultipartFile imageFile) {
         good.setId(INITIAL_ID);
         if (!imageFile.isEmpty()) {
