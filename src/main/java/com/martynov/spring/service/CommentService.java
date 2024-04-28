@@ -35,7 +35,7 @@ public class CommentService {
     public int deleteCommentAndReturnGoodId(int commentId) {
         Person person = personService.getCurrentPerson();
         Comment comment = commentRepository.findById(commentId).orElseThrow(RuntimeException::new);
-        if (comment.getPerson().getUsername().equals(person.getUsername())) {
+        if (comment.getPerson().getUsername().equals(person.getUsername()) || person.getRole().equals("ROLE_ADMIN")) {
             commentRepository.delete(comment);
         } else {
             throw new RuntimeException();

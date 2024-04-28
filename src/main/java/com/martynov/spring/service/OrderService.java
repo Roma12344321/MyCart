@@ -30,7 +30,6 @@ public class OrderService {
         Balance balance = balanceService.findByPerson(person);
         checkBalance(balance, good.getPrice());
         makeBalance(balance, good.getPrice());
-        balanceService.save(balance);
         Session session = entityManager.unwrap(Session.class);
         Order orderFromDb = getOrderFromDb(session, cart);
         if (orderFromDb == null) {
@@ -90,7 +89,8 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Long getSumOfAmountOfOrders() {
-        return entityManager.createQuery("select sum(o.amount) from Order o", Long.class).getSingleResult();
+        Long sum = entityManager.createQuery("select sum(o.amount) from Order o", Long.class).getSingleResult();
+        return sum != null ? sum : 0;
     }
 
     private Order getOrderFromDb(Session session, Cart cart) {

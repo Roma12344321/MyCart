@@ -19,7 +19,7 @@ public class CommentController {
     public String create(@PathVariable("id") int goodId, @ModelAttribute("comment") @Valid Comment comment, BindingResult result) {
         comment.setId(0);
         if (result.hasErrors())
-            return "good/show_one";
+            return "redirect:/good/{id}?failure=true";
         commentService.createComment(goodId, comment.getText(), comment.getStar());
         return "redirect:/good/{id}";
     }

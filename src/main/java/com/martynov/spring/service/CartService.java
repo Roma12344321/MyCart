@@ -56,11 +56,7 @@ public class CartService {
     @Transactional(readOnly = true)
     public List<Cart> getAllCartsForPerson() {
         Person person = personService.getCurrentPerson();
-        List<Cart> cartList = cartRepository.findByPerson(person);
-        for (Cart cart : cartList) {
-            cart.setGood(goodService.findByIdWithOutComments(cart.getGood().getId()));
-        }
-        return cartList;
+        return cartRepository.findByPerson(person);
     }
 
     @Transactional

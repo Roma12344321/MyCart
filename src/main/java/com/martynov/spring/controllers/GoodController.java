@@ -36,7 +36,9 @@ public class GoodController {
     }
 
     @GetMapping("/{id}")
-    public String showGoodById(@PathVariable("id") int id, Model model, @ModelAttribute("comment") Comment comment) {
+    public String showGoodById(@PathVariable("id") int id, Model model, @ModelAttribute("comment") Comment comment,
+                               @RequestParam(value = "failure",required = false,defaultValue = "false") Boolean commentFailure) {
+        model.addAttribute("failure",commentFailure);
         model.addAttribute("good", goodService.findByIdWithComments(id));
         try {
             model.addAttribute("person", personService.getCurrentPerson());
@@ -48,8 +50,8 @@ public class GoodController {
 
     @PreAuthorize("!hasRole('ROLE_WORKER')")
     @PostMapping("/{id}")
-    public String addToCart(@PathVariable("id") int id) {
-        cartService.addGoodToCart(id);
+    public String addToCart(@PathVariable("id") int goodId) {
+        cartService.addGoodToCart(goodId);
         return "redirect:/good?success=true";
     }
 

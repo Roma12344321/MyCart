@@ -32,8 +32,8 @@ public class BalanceService {
         int sumAfter = balanceFromDb.getSum() + balance.getSum();
         balanceFromDb.setSum(sumAfter);
         person.setBalance(balanceFromDb);
-        save(balanceFromDb);
     }
+
     @Transactional(readOnly = true)
     public Balance findByPerson(Person person) {
         return balanceRepository.findByPerson(person);

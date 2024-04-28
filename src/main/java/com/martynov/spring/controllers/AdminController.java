@@ -31,7 +31,7 @@ public class AdminController {
 
     @GetMapping("/good/{id}")
     public String showGoodById(@PathVariable("id") int id, Model model) {
-        model.addAttribute("good", goodService.findByIdWithComments(id));
+        model.addAttribute("good", goodService.findByIdWithOutComments(id));
         return "admin/show_one";
     }
 

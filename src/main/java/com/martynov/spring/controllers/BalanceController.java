@@ -25,7 +25,6 @@ public class BalanceController {
     }
     @PostMapping("")
     public String addSum(@ModelAttribute("balance") Balance balance) {
-        System.out.println(balance.getSum());
         balanceService.addSum(balance);
         return "redirect:/balance";
     }

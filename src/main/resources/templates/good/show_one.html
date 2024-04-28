@@ -28,7 +28,7 @@
         <p th:text="${comment.getStar()}"></p>
         <p th:text="${comment.getPerson().getUsername()}"></p>
         <div th:if="${person!=null}">
-        <form th:if="${person.getUsername().equals(comment.getPerson().getUsername())}" th:method="DELETE" th:action="@{/comment/{id}(id=${comment.getId()})}">
+        <form th:if="${person.getUsername().equals(comment.getPerson().getUsername()) || person.role.equals('ROLE_ADMIN')}" th:method="DELETE" th:action="@{/comment/{id}(id=${comment.getId()})}">
             <input type="submit" value="Удалить комментарий"/>
         </form>
         </div>
@@ -43,8 +43,9 @@
     <div style="color:red" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">text Error</div>
     <br/>
     <label for="star">Enter star: </label>
-    <input type="text" th:field="*{star}" id="star"/>
+    <input type="number" th:field="*{star}" id="star"/>
     <div style="color:red" th:if="${#fields.hasErrors('star')}" th:errors="*{star}">star Error</div>
+    <div style="color:red" th:if="${failure}">Введите число 1-10</div>
     <br/>
     <input type="submit" th:value="'Написать коммент'"/>
 </form>
