@@ -28,13 +28,13 @@ public class AuthApiController {
     private final PersonValidator personValidator;
     private final RegistrationService registrationService;
     private final JWTUtil jwtUtil;
-    private final Mapper<Person,PersonDto> personMapper;
+    private final Mapper<Person,PersonDto> mapper;
     private final AuthenticationManager authenticationManager;
 
 
     @PostMapping("/registration")
     public Map<String, String> performRegistration(@RequestBody @Valid PersonDto personDto, BindingResult bindingResult) {
-        Person person = personMapper.mapDtoToEntity(personDto,Person.class);
+        Person person = mapper.mapDtoToEntity(personDto,Person.class);
         personValidator.validate(person, bindingResult);
         if (bindingResult.hasErrors()) {
             return Map.of("message", "error");

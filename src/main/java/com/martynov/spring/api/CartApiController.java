@@ -5,6 +5,8 @@ import com.martynov.spring.entity.Cart;
 import com.martynov.spring.mapper.Mapper;
 import com.martynov.spring.service.CartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
